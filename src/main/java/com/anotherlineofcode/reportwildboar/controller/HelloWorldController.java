@@ -10,7 +10,7 @@ public class HelloWorldController {
 
     @GetMapping({"/", "hello"})
     public String helloWorld(@RequestParam(required = false, defaultValue = "World") String name, Model model) {
-        model.addAttribute("name", name);
+        model.addAttribute("name", name + " TELEMABK!");
         return "hello-world";
     }
 }
