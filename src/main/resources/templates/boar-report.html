@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Reporting</title>
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-slider/css/bootstrap-slider.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+</head>
+<body>
+<h1>Form</h1>
+<div class="container">
+<form action="#" th:action="@{/report}" th:object="${boarReport}" method="post">
+    <div>Longitude: <input type="text" th:field="*{longitude}" /></div>
+    <div>Latitude: <input type="text" th:field="*{latitude}" /></div>
+    <div class="ml-2">
+        <div class="form-group mt-3">
+            <input id="amount" type="text" th:field="*{amount}" data-slider-min="1" data-slider-max="30"
+                   data-slider-step="1"
+                   data-slider-value="1" class="wildboar"/>
+            <span class="ml-2">Amount of boars: <strong id="amountVal">1</strong></span>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit form</button>
+</form>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:rel="stylesheet" th:src="@{assets/bootstrap-slider/bootstrap-slider.js}"></script>
+
+<script>
+    $(".wildboar").slider();
+    $(".wildboar").on("slide", function (slideEvt) {
+        $("#" + slideEvt.target.id + "Val").text(slideEvt.value);
+    });
+    $(".wildboar").on("change", function (slideEvt) {
+        $("#" + slideEvt.target.id + "Val").text(slideEvt.value.newValue);
+    });
+</script>
+
+</body>
+</html>
