@@ -12,11 +12,30 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Float geoLat;
-    private Float geoLong;
-    private Integer source;
+    private Integer source = 1;
     private Long timestamp;
     private Integer quantity;
+    private Float geoLat;
+    private Float geoLong;
+    private String geoLatString;
+    private String geoLongString;
+
+
+    public String getGeoLatString() {
+        return geoLatString;
+    }
+
+    public void setGeoLatString(String geoLatString) {
+        this.geoLatString = geoLatString;
+    }
+
+    public String getGeoLongString() {
+        return geoLongString;
+    }
+
+    public void setGeoLongString(String geoLongString) {
+        this.geoLongString = geoLongString;
+    }
 
     public Float getGeoLat() {
         return geoLat;
