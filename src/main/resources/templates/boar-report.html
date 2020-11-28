@@ -7,9 +7,12 @@
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 </head>
 <body onload="getLocation()">
+<h1>Allow us to access your location or provide address to get coordinates</h1>
 <div class="container">
-    <span>Provide address <input id="address" type="text"/></span>
-    <button id="getCoordinatesBtn" onclick="getLocationFromAddress()">Get Coordinates</button>
+    <div>
+        <span>Provide address <input id="address" type="text"/></span>
+        <button id="getCoordinatesBtn" onclick="getLocationFromAddress()">Get Coordinates</button>
+    </div>
 <form action="#" th:action="@{/report}" th:object="${report}" method="post">
     <div class="ml-2">
         <span>Lat:<input id="lat" type="text" readonly="readonly" th:field="*{geoLatString}" required/></span>
