@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -31,21 +30,15 @@ public class HelloWorldController {
     @Autowired
     PredictionRepository predictionRepository;
 
-    @GetMapping({"/", "hello"})
-    public String helloWorld(@RequestParam(required = false, defaultValue = "World") String name, Model model) {
-        model.addAttribute("name", name + " TELEMABK!");
-        return "hello-world";
+    @GetMapping({"/"})
+    public String helloWorld(Model model) {
+        return "index";
     }
 
     @GetMapping("/report")
     public String reportForm(Model model){
         model.addAttribute("report", new Report());
         return "boar-report";
-    }
-
-    @GetMapping("/map")
-    public String showMap(Model model){
-        return "map";
     }
 
     @GetMapping("/file/boars_clean")
