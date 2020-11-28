@@ -5,6 +5,9 @@ let zoom = 7;
 
 let highlighted;
 
+let observations = []; // markers
+let predictions = []; // highlighted areas
+
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: zoom,
@@ -16,27 +19,83 @@ function initMap() {
           type: "GET",
           url: "/file/boars_clean",
           dataType: "text",
-          success: function(data) {processData(data);}
+          success: function(data) {processData(data, map);}
+       });
+
+       $.ajax({
+          type: "GET",
+          url: "/predictions",
+          dataType: "text",
+          success: function(predictions) {processPredictions(predictions, map);}
        });
   });
-
-  areas = drawAndReturnAreas(map);
-
-  areas.forEach(area => google.maps.event.addListener(area, 'mouseover', function(){highlight(this);}))
-  areas.forEach(area => google.maps.event.addListener(area, 'mouseout', function(){clearHighlight();}))
-
 }
 
-function processData(allText) {
-  heatmap = new google.maps.visualization.HeatmapLayer({
-      data: getEnetWildData(allText),
-      map: map,
-  });
+function processData(allText, map) {
+  data = $.csv.toArrays(allText);
+  data.forEach(entry => observations.push(new google.maps.Marker({
+                            position: { lat: parseFloat(entry[0]), lng: parseFloat(entry[1]) },
+                            map,
+                          })));
+
+
  }
+function dataToDictWithSquaresIdsAsKeys(data){
+    let orgniazedData = $.csv.toArrays(data);
+    let result = orgniazedData.reduce(function(map, obj) {
+        map[obj[1]] = obj[2];
+        return map;
+    }, {});
+    return result
+}
+
+function processPredictions(predictions, map) {
+    let squareToPrediction = dataToDictWithSquaresIdsAsKeys(predictions);
+
+    var southWest = {lng: 14.0745211117, lat: 49.0273953314};
+    var northEast = {lng: 24.0299857927, lat: 54.8515359564};
+
+    var numberOfParts = 60;
+
+    var tileWidth = (northEast.lng - southWest.lng) / numberOfParts;
+    var tileHeight = (northEast.lat - southWest.lat) / numberOfParts;
+
+    let heatmapPoints = [];
+
+    for (var x = 0; x < numberOfParts; x++) {
+      for (var y = 0; y < numberOfParts; y++) {
+        let square_id = (x * numberOfParts + y).toString();
+
+        if (squareToPrediction[square_id] == "1"){
+          let lat = (southWest.lat + (tileHeight * (y+1)) + southWest.lat + (tileHeight * y)) / 2.0
+          let lng = (southWest.lng + (tileWidth * (x+1)) + southWest.lng + (tileWidth * x)) / 2.0
+          heatmapPoints.push(new google.maps.LatLng(lat, lng));
+        }
+      }
+    }
+
+    heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatmapPoints,
+      map: map,
+    });
+
+}
 
 function toggleHeatmap() {
   heatmap.setMap(heatmap.getMap() ? null : map);
 }
+
+function toggleObservations(){
+  var checkBox = document.getElementById("observationCheckbox");
+  observations.forEach(marker => marker.setVisible(checkBox.checked == true));
+}
+
+
+function togglePredictions(){
+  var checkBox = document.getElementById("predictionCheckbox");
+  predictions.forEach(prediction => prediction.setMap(checkBox.checked == true ? null : map));
+}
+
 
 function changeGradient() {
   const gradient = [
@@ -56,60 +115,4 @@ function changeGradient() {
     "rgba(255, 0, 0, 1)",
   ];
   heatmap.set("gradient", heatmap.get("gradient") ? null : gradient);
-}
-
-function changeRadius() {
-  heatmap.set("radius", heatmap.get("radius") ? null : 20);
-}
-
-function changeOpacity() {
-  heatmap.set("opacity", heatmap.get("opacity") ? null : 0.2);
-}
-
-function getEnetWildData(csvInString) {
-    data = $.csv.toObjects(csvInString);
-    return data.map(data => new google.maps.LatLng(data.lat, data.long));
-}
-
-function drawAndReturnAreas(map) {
-  var southWest = {lng: 14.0745211117, lat: 49.0273953314};
-  var northEast = {lng: 24.0299857927, lat: 54.8515359564};
-
-  var numberOfParts = 60;
-
-  var tileWidth = (northEast.lng - southWest.lng) / numberOfParts;
-  var tileHeight = (northEast.lat - southWest.lat) / numberOfParts;
-
-  areas = [];
-
-  for (var x = 0; x < numberOfParts; x++) {
-    for (var y = 0; y < numberOfParts; y++) {
-      var areaBounds = {
-        north: southWest.lat + (tileHeight * (y+1)),
-        south: southWest.lat + (tileHeight * y),
-        east: southWest.lng + (tileWidth * (x+1)),
-        west: southWest.lng + (tileWidth * x)
-      };
-
-      var area = new google.maps.Rectangle({
-        fillColor: "#FF0000",
-        fillOpacity: 0.35,
-        strokeWeight: 0,
-        map: map,
-        bounds: areaBounds,
-      });
-
-      areas.push(area);
-    }
-  }
-  return areas;
-}
-
-function highlight(area){
-    area.setOptions({fillOpacity: 0.7});
-    highlighted = area;
-}
-
-function clearHighlight(){
-    highlighted.setOptions({fillOpacity: 0.35});
 }

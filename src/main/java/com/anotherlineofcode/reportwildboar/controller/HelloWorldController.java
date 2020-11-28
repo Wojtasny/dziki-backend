@@ -10,12 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +51,21 @@ public class HelloWorldController {
         }
     }
 
+    @GetMapping("/photo")
+    public String takePhoto(Model model){
+        return "photo";
+    }
+
+    @PostMapping("/photo")
+    public void uploadFile(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+        File persistFile = new File("dummyPhoto.jpg");
+        try {
+            file.transferTo(persistFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("/predictions")
     public void getPredictionsCSV(HttpServletResponse response) {
         response.setContentType("text/plain; charset=utf-8");
@@ -80,12 +95,13 @@ public class HelloWorldController {
     }
 
     String getBoarsCSVAsString(){
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("data/boars_clean.csv");
-        if (inputStream != null) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        } else {
-            throw new RuntimeException("resource not found");
-        }
+        List<Report> repositoryList = reportRepository.findAll();
+        String reports =  StreamSupport.stream(repositoryList.spliterator(), false)
+                .filter(report -> report.getSource().equals(4))
+                .map(repository -> repository.getGeoLat().toString()
+                        + "," + repository.getGeoLong().toString()
+                        + "," + repository.getTimestamp().toString())
+                .collect(Collectors.joining(System.lineSeparator()));
+        return reports;
     }
 }
