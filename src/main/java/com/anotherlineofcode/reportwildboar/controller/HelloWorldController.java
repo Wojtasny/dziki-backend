@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -80,7 +81,7 @@ public class HelloWorldController {
     String getBoarsCSVAsString(){
         List<Report> repositoryList = reportRepository.findAll();
         String reports =  StreamSupport.stream(repositoryList.spliterator(), false)
-                .filter(report -> report.getSource().equals(4))
+                .filter(report -> Arrays.asList(1,4).contains(report.getSource()))
                 .map(repository -> repository.getGeoLat().toString()
                         + "," + repository.getGeoLong().toString()
                         + "," + repository.getTimestamp().toString())
