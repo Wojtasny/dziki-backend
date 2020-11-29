@@ -88,9 +88,7 @@ $("#report-button").on("click", function(event) {
   }
   else {
     $("#error-adress").empty()
-  }
-
-  var $form = $("#report-form");
+    var $form = $("#report-form");
   var data = getFormData($form);
 
   var jsonData = {
@@ -112,6 +110,7 @@ $("#report-button").on("click", function(event) {
     dataType: 'json',
     contentType: 'application/json'
   });
+  }
 
 });
 
