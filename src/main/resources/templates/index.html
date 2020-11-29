@@ -150,16 +150,28 @@
         </div>
     </section><!-- End About Section -->
 
-    <!-- ======= Counts Section ======= -->
+    <!-- ======= Map Section ======= -->
     <section id="mapsection" class="mapsection">
-        <div class="row content">
-            <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
-                <h2>Gdzie dzisiaj można spotkać dzika?</h2>
-            </div>
-            <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-left" data-aos-delay="200">
-                <h3>Na podstawie historycznych danych</h3>
+        <div class="container">
+            <div class="row content">
+                <div class="col-lg-5" data-aos="fade-right" data-aos-delay="100">
+                    <h1>Gdzie dzisiaj można spotkać dzika?</h1>
+                </div>
+                <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+                    <h3>Na mapie prezentowane są dwa rodzaje danych:</h3>
+                    <div data-aos="fade-left" data-aos-delay="200">
+                        <ul>
+                            <li> zgłoszenia zaobserwowania dzika w formie markerów</li>
+                            <li> mapa prawdopodobieństwa spotkania dzika na danym obszarze</li>
+                        </ul>
+                        <h4>
+                            Mapa zostawa wytworzona przez model uczenia maszynowego na podstawie historycznych danych z obszaru nie tylko Polski, ale i całej Europy!
+                        </h4>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="map-container" data-aos="fade-in" data-aos-delay="100">
             <input type="checkbox" id="observationCheckbox" name="Obserwacje" onclick="toggleObservations()" checked/>
             <label for="observationCheckbox">Obserwacje</label>
