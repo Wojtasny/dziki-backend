@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Date;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,11 +34,6 @@ public class HelloWorldController {
         return "index";
     }
 
-    @GetMapping("/report")
-    public String reportForm(Model model){
-        model.addAttribute("report", new Report());
-        return "boar-report";
-    }
 
     @GetMapping("/file/boars_clean")
     public void getBoarsCleanCsv(HttpServletResponse response){
@@ -81,17 +75,6 @@ public class HelloWorldController {
         return StreamSupport.stream(predictionIterable.spliterator(), false)
                 .map(prediction -> prediction.getDate().toString() + "," + prediction.getSquare_id().toString() + "," + prediction.getPrediction().toString())
                 .collect(Collectors.joining(System.lineSeparator()));
-    }
-
-    @PostMapping("/report")
-    public String reportBoar(@ModelAttribute Report report, Model model) {
-        model.addAttribute("report", report);
-        report.setGeoLat(Float.parseFloat(report.getGeoLatString()));
-        report.setGeoLong(Float.parseFloat(report.getGeoLongString()));
-        Date date = new Date();
-        report.setTimestamp(date.getTime());
-        reportRepository.save(report);
-        return "report-result";
     }
 
     String getBoarsCSVAsString(){

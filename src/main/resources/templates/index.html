@@ -44,9 +44,13 @@
     <script th:src="@{/js/main.js}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.js"></script>
 
+    <!-- Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Uw0UdWLNwEegH0XQa7T6RNawUevjPTA&callback=initMap&libraries=visualization" defer></script>
     <script th:src="@{/libraries/jquery-csv.js}"></script>
     <script th:src="@{/js/map.js}"></script>
+
+    <!-- Form -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css"/>
 
 </head>
 
@@ -57,7 +61,7 @@
     <div class="container">
         <div class="header-container d-flex align-items-center">
             <div class="logo mr-auto">
-                <h1 class="text-light"><a href=""><span>Telemabk</span></a></h1>
+                <h1 class="text-light"><a href=""><span>ALOC</span></a></h1>
             </div>
 
             <nav class="nav-menu d-none d-lg-block">
@@ -65,7 +69,7 @@
                     <li class="active"><a href="#header">Strona główna</a></li>
                     <li><a href="#info">Informacje</a></li>
                     <li><a href="#mapsection">Mapa</a></li>
-                    <li><a href="#contact">Kontakt</a></li>
+                    <li><a href="#why-us">Kontakt</a></li>
 
                     <li class="get-started"><a href="#report">Zgłoś dzika</a></li>
                 </ul>
@@ -77,7 +81,7 @@
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="d-flex align-items-center">
     <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="200">
-        <a href="#report" class="btn-get-started scrollto">Zgłoś wystąpienie dzika</a>
+        <a href="#report" class="btn-get-started scrollto">Zgłoś dzika</a>
     </div>
 </section><!-- End Hero -->
 
@@ -86,23 +90,35 @@
     <!-- ======= Report Section ======= -->
     <section id="report" class="report">
         <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="100">
-            <form class="php-email-form mt-4" role="form">
+            <form class="php-email-form mt-4" role="form" id="report-form">
                 <div class="form-group">
                     <input type="hidden" name="lat" id="lat" />
                     <input type="hidden" name="lon" id="lon" />
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="inputAddress" id="inputAddress" placeholder="Adres" data-rule="minlen:4" data-msg="Podaj przynajmniej 4 znaki" />
-                </div>
-                <div class="form-group">
-                    <input type="text" name="amount" id="amount" data-slider-min="1" data-slider-max="30"
-                           data-slider-step="1"
-                           data-slider-value="1" class="amountslider"/>
+                <div class="form-row">
+                    <div class="form-group col-md-9">
+                        <input type="text" class="form-control" name="address" id="address" placeholder="Adres" data-rule="minlen:4" data-msg="Podaj przynajmniej 4 znaki" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button class="form-control" id="getCoordinatesBtn" type="submit">Zlokalizuj mnie</button>
+                    </div>
                 </div>
 
-                <div class="text-center"><button type="submit">Zgłoś</button></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" name="amount" id="amount" data-slider-min="1" data-slider-max="30"
+                               data-slider-step="1"
+                               data-slider-value="1" class="amountslider"/>
+                        <span class="ml-2">Liczba dzików: <strong id="amountVal">1</strong></span>
+                    </div>
+                </div>
+
+                <div class="text-center"><button id="report-button" type="submit">Zgłoś</button></div>
             </form>
 
+            <div style="display:none;" id="thank-you-report" data-aos="fade-right" data-aos-delay="100">
+                <h2>Dziękujemy za zgłoszenie !</h2>
+            </div>
 
         </div>
     </section><!-- End Report -->
@@ -153,36 +169,6 @@
         </div>
     </section><!-- End Counts Section -->
 
-    <!-- ======= Counts Section ======= -->
-    <section id="counts" class="counts">
-        <div class="container">
-
-            <div class="row counters">
-
-                <div class="col-lg-3 col-6 text-center">
-                    <span data-toggle="counter-up">232</span>
-                    <p>Clients</p>
-                </div>
-
-                <div class="col-lg-3 col-6 text-center">
-                    <span data-toggle="counter-up">521</span>
-                    <p>Projects</p>
-                </div>
-
-                <div class="col-lg-3 col-6 text-center">
-                    <span data-toggle="counter-up">1,463</span>
-                    <p>Hours Of Support</p>
-                </div>
-
-                <div class="col-lg-3 col-6 text-center">
-                    <span data-toggle="counter-up">15</span>
-                    <p>Hard Workers</p>
-                </div>
-
-            </div>
-
-        </div>
-    </section><!-- End Counts Section -->
 
     <!-- ======= Why Us Section ======= -->
     <section id="why-us" class="why-us">
@@ -238,63 +224,11 @@
         </div>
     </section><!-- End Why Us Section -->
 
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4" data-aos="fade-right">
-                    <div class="section-title">
-                        <h2>Kontakt</h2>
-                    </div>
-                </div>
-
-                <form action="forms/contact.php" method="post" role="form" class="php-email-form mt-4">
-                    <div class="form-row">
-                        <div class="col-md-6 form-group">
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Imię i Nazwisko" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-                            <div class="validate"></div>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
-                            <div class="validate"></div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Temat" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-                        <div class="validate"></div>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Tutaj wpisz treść wiadomości"></textarea>
-                        <div class="validate"></div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="loading">Ładowanie</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Twoja wiadomość została wysłana. Dziękujemy!</div>
-                    </div>
-                    <div class="text-center"><button type="submit">Wyślij wiadomość</button></div>
-                </form>
-            </div>
-        </div>
-
-        </div>
-    </section><!-- End Contact Section -->
-
 </main><!-- End #main -->
 
 <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
-<script>
-    console.log("asdasda")
-    $(".amountslider").slider();
-    $(".amountslider").on("slide", function (slideEvt) {
-        $("#" + slideEvt.target.id + "Val").text(slideEvt.value);
-    });
-    $(".amountslider").on("change", function (slideEvt) {
-        $("#" + slideEvt.target.id + "Val").text(slideEvt.value.newValue);
-    });
-  </script>
-
+<script th:src="@{/js/form.js}"></script>
 </body>
 
 </html>
