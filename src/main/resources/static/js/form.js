@@ -74,6 +74,11 @@ $("#getCoordinatesBtn").on("click", function(event) {
   getLocation();
 });
 
+$('#dead-boar').bootstrapToggle({
+  on: 'Żywy dzik',
+  off: 'Martwy dzik'
+});
+
 $("#report-button").on("click", function(event) {
   event.preventDefault();
 
