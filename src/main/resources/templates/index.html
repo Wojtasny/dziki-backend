@@ -41,7 +41,7 @@
     <script th:src="@{/vendor/aos/aos.js}"></script>
 
     <!-- Template Main JS File -->
-    <script th:src="@{/js/main.js}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.js"></script>
 
     <!-- Map -->
@@ -67,7 +67,7 @@
             <nav class="nav-menu d-none d-lg-block">
                 <ul>
                     <li class="active"><a href="#header">Strona główna</a></li>
-                    <li><a href="#info">Informacje</a></li>
+                    <li><a href="#about">Informacje</a></li>
                     <li><a href="#mapsection">Mapa</a></li>
                     <li><a href="#why-us">Kontakt</a></li>
 
@@ -96,8 +96,9 @@
                     <input type="hidden" name="lon" id="lon" />
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-9">
-                        <input type="text" class="form-control" name="address" id="address" placeholder="Adres" data-rule="minlen:4" data-msg="Podaj przynajmniej 4 znaki" />
+                    <div class="form-group col-md-9 has-error">
+                        <input type="text" class="form-control" name="address" id="address" placeholder="Gdzie zobaczyłeś dzika?" data-rule="minlen:4" data-msg="Podaj przynajmniej 4 znaki" />
+                        <span id="error-adress" style="color:red" class="help-block"></span>
                     </div>
                     <div class="form-group col-md-3">
                         <button class="form-control" id="getCoordinatesBtn" type="submit">Zlokalizuj mnie</button>
@@ -170,15 +171,21 @@
                     </div>
                 </div>
             </div>
+
+            <div>
+                <input type="checkbox" id="observationCheckbox" name="Obserwacje" onclick="toggleObservations()" checked/>
+                <label for="observationCheckbox">Obserwacje</label>
+            </div>
+            <div>
+                <input type="checkbox" id="predictionCheckbox" name="Predykcje" onclick="toggleHeatmap()" checked/>
+                <label for="predictionCheckbox">Predykcje</label>
+            </div>
         </div>
 
         <div class="map-container" data-aos="fade-in" data-aos-delay="100">
-            <input type="checkbox" id="observationCheckbox" name="Obserwacje" onclick="toggleObservations()" checked/>
-            <label for="observationCheckbox">Obserwacje</label>
-            <input type="checkbox" id="predictionCheckbox" name="Predykcje" onclick="toggleHeatmap()" checked/>
-            <label for="predictionCheckbox">Predykcje</label>
             <div id="map"></div>
         </div>
+
     </section><!-- End Counts Section -->
 
 
@@ -240,6 +247,7 @@
 
 <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
+<script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/form.js}"></script>
 </body>
 

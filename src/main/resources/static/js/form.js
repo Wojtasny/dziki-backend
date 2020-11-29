@@ -10,8 +10,10 @@ function getLocationFromAddress(){
     geocoder.geocode( { 'address': address.value}, function(results, status) {
 
     if (status == google.maps.GeocoderStatus.OK) {
-        lat.value = results[0].geometry.location.lat();
-        lon.value = results[0].geometry.location.lng();
+        var geoLat = results[0].geometry.location.lat()
+        var geoLot = results[0].geometry.location.lng()
+        lat.value = geoLat
+        lon.value = geoLot
         }
     });
 }
@@ -24,9 +26,22 @@ function getLocation() {
   }
 }
 
+function getReverseGeocodingData(lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            $("#address").val(results[0].formatted_address)
+        }
+    });
+}
+
 function showPosition(position) {
   lat.value = position.coords.latitude
-  lon.value = position.coords.longitude;
+  lon.value = position.coords.longitude
+
+  getReverseGeocodingData(position.coords.latitude, position.coords.longitude)
 }
 
 function showError(error) {
@@ -61,7 +76,19 @@ $("#getCoordinatesBtn").on("click", function(event) {
 
 $("#report-button").on("click", function(event) {
   event.preventDefault();
-  console.log( "report" );
+
+  if (lat.value == "" || lon.value == "") {
+     getLocationFromAddress()
+
+     if (lat.value == "") {
+        $("#error-adress").text("Proszę wprowadź poprawny adres lub pozwól aby aplikacja zlokalizowała Cię automatycznie")
+     }
+
+     console.log("Lat: " + lat.value)
+  }
+  else {
+    $("#error-adress").empty()
+  }
 
   var $form = $("#report-form");
   var data = getFormData($form);
@@ -85,7 +112,6 @@ $("#report-button").on("click", function(event) {
     dataType: 'json',
     contentType: 'application/json'
   });
-
 
 });
 
